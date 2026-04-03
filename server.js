@@ -2,15 +2,21 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./config/db.js";
+import recordRoutes from "./routes/recordRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
-connectDB(); // 🔥 DB connect
+connectDB();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// ROUTES
+app.use("/api/users", userRoutes);
+app.use("/api/records", recordRoutes);
 
 app.get("/", (req, res) => {
   res.send("Finance Backend Running...");
