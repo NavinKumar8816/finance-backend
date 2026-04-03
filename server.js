@@ -2,8 +2,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./config/db.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 import recordRoutes from "./routes/recordRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+
 
 dotenv.config();
 
@@ -17,6 +19,7 @@ app.use(express.json());
 // ROUTES
 app.use("/api/users", userRoutes);
 app.use("/api/records", recordRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.get("/", (req, res) => {
   res.send("Finance Backend Running...");

@@ -5,10 +5,16 @@ import {
     updateUser,
 } from "../controllers/userController.js";
 
+import { mockAuth } from "../middleware/auth.js";
+import { authorizeRoles } from "../middleware/roleMiddleware.js";
+
 const router = express.Router();
 
-router.post("/", createUser);
-router.get("/", getUsers);
-router.patch("/:id", updateUser);
+// ONLY ADMIN
+router.post("/", mockAuth, authorizeRoles("admin"), createUser);
+router.patch("/:id", mockAuth, authorizeRoles("admin"), updateUser);
+
+// ADMIN + ANALYST
+router.get("/", mockAuth, authorizeRoles("admin", "analyst"), getUsers);
 
 export default router;
