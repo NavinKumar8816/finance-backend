@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import rateLimit from "express-rate-limit";
 import connectDB from "./config/db.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import recordRoutes from "./routes/recordRoutes.js";
@@ -12,6 +13,14 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
+});
+app.use(limiter);
 
 app.use(cors());
 app.use(express.json());

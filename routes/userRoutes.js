@@ -1,20 +1,29 @@
 import express from "express";
 import {
     createUser,
+    deleteUser,
     getUsers,
+    loginUser,
+    registerUser,
     updateUser,
 } from "../controllers/userController.js";
 
-import { mockAuth } from "../middleware/auth.js";
+import { authenticate } from "../middleware/auth.js";
 import { authorizeRoles } from "../middleware/roleMiddleware.js";
 
 const router = express.Router();
 
+// PUBLIC ROUTES
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+
+// PROTECTED ROUTES
 // ONLY ADMIN
-router.post("/", mockAuth, authorizeRoles("admin"), createUser);
-router.patch("/:id", mockAuth, authorizeRoles("admin"), updateUser);
+router.post("/", authenticate, authorizeRoles("admin"), createUser);
+router.patch("/:id", authenticate, authorizeRoles("admin"), updateUser);
+router.delete("/:id", authenticate, authorizeRoles("admin"), deleteUser);
 
 // ADMIN + ANALYST
-router.get("/", mockAuth, authorizeRoles("admin", "analyst"), getUsers);
+router.get("/", authenticate, authorizeRoles("admin", "analyst"), getUsers);
 
 export default router;
